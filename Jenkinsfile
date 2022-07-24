@@ -3,7 +3,7 @@ pipeline {
     agent any
     stages {
         stage('Build') {
-        agent { label "Agent" }
+        agent { label "agent" }
             steps {
               //
                 script { echo "Build"
@@ -25,14 +25,14 @@ pipeline {
               }
             }
         stage('Test') {
-        agent { label "Agent" }
+        agent { label "agent" }
             steps {
               //
                 script { echo "Test" }
               }
             }
         stage('Deploy') {
-        agent { label "Agent" }
+        agent { label "agent" }
             steps {
               //
                 script { echo "Deploy3" }
