@@ -2,40 +2,46 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     agent any
     stages {
-        stage('Build') {
-        agent { label "agent" }
+        stage('Test') {
+        agent { label "agent" } // Define mau running di agent yang mana
             steps {
-              //
-                script { echo "Build"
+              // Test menggunakan Sonarqube
+                script { echo "Begin Testing Using Sonarqube" 
+                def scannerHome = tool 'sonarqube' ; //sonarqube by Global Tools Configuration
+                withSonarQubeEnv('sonarqube') {  //sonarqube by Endpoint Server Sonarqube
+                sh "${scannerHome}/bin/sonar-scanner"}
+                } 
+              }
+            
+            }
+        stage('Build') {
+        agent { label "agent" } // Define mau running di agent yang mana
+            steps {
+              // Build Image
+                script { echo "Begin Build"
                 if (env.BRANCH_NAME == "dev")
                 
                 { 
-                sh "docker build -t harjay88/landingpage_test:dev-$BUILD_NUMBER . "
-                sh "docker push harjay88/landingpage_test:dev-$BUILD_NUMBER"
+                sh "docker build -t harjay88/landingpage:dev-$BUILD_NUMBER . "
+                sh "docker push harjay88/landingpage:dev-$BUILD_NUMBER"
 
                 }else{ 
-                sh "docker build -t harjay88/landingpage_test:master-$BUILD_NUMBER . "
-                sh "docker push harjay88/landingpage_test:master-$BUILD_NUMBER"
+                sh "docker build -t harjay88/landingpage:master-$BUILD_NUMBER . "
+                sh "docker push harjay88/landingpage:master-$BUILD_NUMBER"
                 
                 }
                 
                 
                 }
                 
-              }
-            }
-        stage('Test') {
-        agent { label "agent" }
-            steps {
-              //
-                script { echo "Test" }
               }
             }
         stage('Deploy') {
-        agent { label "agent" }
+        agent { label "agent" }  // Define mau running di agent yang mana
             steps {
-              //
-                script { echo "Deploy3" }
+              // Deploy to Kubernetes
+                script { echo "Begin to Deploy" 
+                }
             }
           }
         }
