@@ -41,6 +41,7 @@ pipeline {
             steps {
               // Deploy to Kubernetes
                 script { echo "Begin to Deploy" 
+                sh "kubectl set image deployment/landingpage landingpage=harjay88/landingpage$BUILD_NUMBER -n landingpage"
                 }
             }
           }
